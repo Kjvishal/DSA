@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Patterns — Master Mind Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Spline+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14110e;
+  --bg2:#1b1714;
+  --panel:#211c18;
+  --panel2:#272019;
+  --line:#352c24;
+  --line2:#473a30;
+  --ink:#fbf6ee;
+  --ink2:#e6dccd;
+  --ink3:#b8aa97;
+  --ink4:#8a7d6c;
+  --amber:#f2b15f;
+  --amber-soft:#46341d;
+  --green:#a3d182;
+  --green-soft:#2a3a20;
+  --blue:#9ec8ee;
+  --blue-soft:#243443;
+  --radius:14px;
+  --radius-sm:9px;
+  --shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 18px 40px -22px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:
+    radial-gradient(1200px 600px at 78% -8%, #211a13 0%, transparent 60%),
+    radial-gradient(900px 500px at -5% 12%, #1a1a18 0%, transparent 55%),
+    var(--bg);
+  color:var(--ink);
+  font-family:"Spline Sans",-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.55;
+  font-size:17px;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+.shell{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:38px 22px 90px}
+
+/* ---------- header ---------- */
+.masthead{margin-bottom:26px}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--amber);margin:0 0 10px}
+h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,5vw,46px);line-height:1.02;letter-spacing:-.02em;margin:0;color:var(--ink)}
+h1 em{font-style:italic;color:var(--amber)}
+.sub{color:var(--ink2);font-size:16.5px;margin:14px 0 0;max-width:60ch}
+
+/* ---------- toolbar ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:24px 0 8px}
+.search{position:relative;flex:1;min-width:200px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--ink4)}
+.search input{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:11px;
+  padding:11px 13px 11px 38px;color:var(--ink);font-family:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.search input::placeholder{color:var(--ink4)}
+.search input:focus{border-color:var(--line2);box-shadow:0 0 0 3px rgba(232,160,75,.1)}
+.btn{
+  font-family:inherit;font-size:13px;font-weight:500;color:var(--ink2);
+  background:var(--panel);border:1px solid var(--line);border-radius:11px;
+  padding:10px 14px;cursor:pointer;transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;
+}
+.btn:hover{background:var(--panel2);border-color:var(--line2);color:var(--ink)}
+.btn svg{width:15px;height:15px}
+.btn-amber{background:var(--amber);border-color:var(--amber);color:#221606;font-weight:600}
+.btn-amber:hover{background:#f0ad5b;border-color:#f0ad5b;color:#221606}
+.btn-ghost{background:transparent}
+
+.statline{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink3);margin:14px 2px 18px;letter-spacing:.02em}
+
+/* ---------- family card ---------- */
+.fam{
+  background:linear-gradient(180deg,var(--panel) 0%,var(--bg2) 100%);
+  border:1px solid var(--line);border-radius:var(--radius);margin-bottom:13px;
+  overflow:hidden;box-shadow:var(--shadow);transition:border-color .18s;
+}
+.fam:hover{border-color:var(--line2)}
+.fam-head{display:flex;align-items:center;gap:13px;padding:16px 17px;cursor:pointer;user-select:none}
+.swatch{width:13px;height:34px;border-radius:5px;flex-shrink:0;box-shadow:0 0 14px -2px var(--swatch-glow,transparent)}
+.fam-title{font-family:"Fraunces",serif;font-weight:600;font-size:23px;letter-spacing:-.01em;color:var(--ink);flex:1;min-width:0}
+.fam-count{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--ink3);padding:3px 10px;border:1px solid var(--line);border-radius:20px;white-space:nowrap}
+.fam-tools{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.fam:hover .fam-tools,.fam.open .fam-tools{opacity:1}
+.icon-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--ink4);cursor:pointer;transition:all .14s}
+.icon-btn:hover{background:var(--panel2);color:var(--ink);border-color:var(--line)}
+.icon-btn.danger:hover{color:#e88;border-color:#532}
+.icon-btn svg{width:16px;height:16px}
+.chev{color:var(--ink4);transition:transform .22s ease;flex-shrink:0}
+.fam.open .chev{transform:rotate(90deg)}
+
+.fam-body{display:none;padding:0 17px 8px}
+.fam.open .fam-body{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ---------- pattern ---------- */
+.pat{border-top:1px solid var(--line);padding:3px 0}
+.pat:first-child{border-top:1px solid transparent}
+.pat-head{display:flex;align-items:center;gap:10px;padding:12px 4px;cursor:pointer}
+.pat-dot{width:6px;height:6px;border-radius:50%;background:var(--ink4);flex-shrink:0;transition:all .15s}
+.pat:hover .pat-dot{background:var(--amber)}
+.pat.open .pat-dot{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.pat-name{font-size:18px;font-weight:500;color:var(--ink);flex:1;min-width:0}
+.pat:hover .pat-name{color:var(--amber)}
+.pat-tag{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--ink3);white-space:nowrap}
+.skill{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;margin-left:4px}
+.skill-lbl{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4)}
+.skill .stars3{display:inline-flex;gap:2px}
+.skill .s3{width:15px;height:15px;cursor:pointer;color:var(--ink4);transition:transform .1s,color .12s}
+.skill .s3.fill{color:var(--green)}
+.skill .s3:hover{transform:scale(1.18)}
+.pat-tools{display:flex;gap:2px;opacity:0;transition:opacity .15s}
+.pat:hover .pat-tools,.pat.open .pat-tools{opacity:1}
+
+.pat-detail{display:none;padding:2px 4px 16px 20px}
+.pat.open .pat-detail{display:block;animation:fade .22s ease}
+.row{display:flex;gap:12px;margin:13px 0;font-size:16px;line-height:1.68}
+.lbl{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:6px;height:fit-content;white-space:nowrap;margin-top:3px;flex-shrink:0}
+.lbl-when{background:var(--amber-soft);color:var(--amber)}
+.lbl-solve{background:var(--blue-soft);color:var(--blue)}
+.lbl-cost{background:var(--green-soft);color:var(--green)}
+.row .body{color:var(--ink)}
+.row .body.mono{font-family:"JetBrains Mono",monospace;font-size:14.5px;color:var(--green)}
+.add-pat{margin:6px 0 12px;width:100%;text-align:left;color:var(--ink3);border:1px dashed var(--line2);background:transparent;border-radius:10px;padding:13px 16px;font-family:inherit;font-size:15px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px}
+.add-pat:hover{color:var(--amber);border-color:var(--amber);background:var(--amber-soft)}
+
+/* ---------- problems section ---------- */
+.prob-wrap{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.prob-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.prob-title{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+.prob-sort{margin-left:auto;display:flex;gap:4px}
+.mini{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink3);background:transparent;border:1px solid var(--line);border-radius:7px;padding:4px 9px;cursor:pointer;transition:all .14s}
+.mini:hover{border-color:var(--line2);color:var(--ink)}
+.mini.on{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
+.prob{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--bg2);transition:border-color .14s}
+.prob:hover{border-color:var(--line2)}
+.prob-ord{display:flex;flex-direction:column;gap:1px;flex-shrink:0;padding-top:1px}
+.ord-btn{width:20px;height:16px;display:grid;place-items:center;border:none;background:transparent;color:var(--ink4);cursor:pointer;border-radius:4px;line-height:1}
+.ord-btn:hover{color:var(--amber);background:var(--amber-soft)}
+.ord-btn:disabled{opacity:.25;cursor:default;background:transparent;color:var(--ink4)}
+.ord-num{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--ink4);text-align:center}
+.prob-main{flex:1;min-width:0}
+.prob-name{font-size:16px;font-weight:500;color:var(--ink)}
+.prob-trig{font-size:13.5px;color:var(--ink3);margin-top:3px;line-height:1.5}
+.prob-trig .tk{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-right:6px;vertical-align:1px}
+.prob-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.prob-tools{display:flex;gap:2px;opacity:0;transition:opacity .14s}
+.prob:hover .prob-tools{opacity:1}
+.stars{display:inline-flex;gap:2px;white-space:nowrap}
+.star{width:17px;height:17px;cursor:pointer;color:var(--ink4);transition:transform .1s,color .12s}
+.star.fill{color:var(--amber)}
+.star:hover{transform:scale(1.18)}
+.add-prob{width:100%;text-align:left;color:var(--ink3);border:1px dashed var(--line);background:transparent;border-radius:9px;padding:10px 13px;font-family:inherit;font-size:13.5px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px}
+.add-prob:hover{color:var(--amber);border-color:var(--amber);background:var(--amber-soft)}
+.no-prob{font-size:13.5px;color:var(--ink4);font-style:italic;margin:2px 0 10px}
+
+/* ---------- revision overlay ---------- */
+.rev-scrim{position:fixed;inset:0;background:rgba(8,6,4,.82);backdrop-filter:blur(6px);z-index:60;display:none;flex-direction:column;align-items:center;padding:30px 18px;overflow-y:auto;animation:fade .2s}
+.rev-scrim.show{display:flex}
+.rev-panel{width:100%;max-width:680px}
+.rev-top{display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.rev-top h2{font-family:"Fraunces",serif;font-weight:600;font-size:30px;margin:0;color:var(--ink)}
+.rev-top h2 em{font-style:italic;color:var(--amber)}
+.rev-close{margin-left:auto;width:38px;height:38px;display:grid;place-items:center;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--ink2);cursor:pointer;transition:all .15s}
+.rev-close:hover{background:var(--panel2);color:var(--ink)}
+.rev-sub{color:var(--ink3);font-size:14.5px;margin:0 0 18px}
+.rev-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.rev-card{display:flex;align-items:center;gap:14px;padding:15px 17px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,var(--panel),var(--bg2));margin-bottom:10px;cursor:pointer;transition:border-color .15s,transform .1s}
+.rev-card:hover{border-color:var(--line2)}
+.rev-card:active{transform:scale(.995)}
+.rev-rank{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink4);width:26px;text-align:right;flex-shrink:0}
+.rev-name{flex:1;min-width:0;font-size:18px;font-weight:500;color:var(--ink)}
+.rev-stars{flex-shrink:0}
+.rev-reveal{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--amber);margin-top:5px;display:none}
+.rev-card.shown .rev-reveal{display:block}
+.rev-card.shown .rev-name{color:var(--amber)}
+.rev-empty{text-align:center;padding:60px 20px;color:var(--ink4)}
+.rev-empty .big{font-family:"Fraunces",serif;font-size:22px;color:var(--ink3);margin-bottom:8px}
+
+.empty{text-align:center;padding:60px 20px;color:var(--ink4)}
+.empty .big{font-family:"Fraunces",serif;font-size:22px;color:var(--ink3);margin-bottom:8px}
+
+/* ---------- modal ---------- */
+.scrim{position:fixed;inset:0;background:rgba(8,6,4,.66);backdrop-filter:blur(4px);z-index:50;display:none;align-items:center;justify-content:center;padding:20px;animation:fade .2s}
+.scrim.show{display:flex}
+.modal{
+  background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line2);
+  border-radius:18px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.85);animation:pop .22s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes pop{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.modal-head{padding:22px 24px 6px}
+.modal-head .mk{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
+.modal-head h3{font-family:"Fraunces",serif;font-weight:600;font-size:23px;margin:0;color:var(--ink)}
+.modal-body{padding:14px 24px 4px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink3);margin-bottom:6px;letter-spacing:.01em}
+.field input,.field textarea{
+  width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;color:var(--ink);font-family:inherit;font-size:14px;outline:none;resize:vertical;transition:border-color .15s,box-shadow .15s;
+}
+.field textarea{min-height:74px;line-height:1.55}
+.field input:focus,.field textarea:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(232,160,75,.12)}
+.field .hint{font-size:11.5px;color:var(--ink4);margin-top:5px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.sw{width:30px;height:30px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .12s}
+.sw:hover{transform:scale(1.12)}
+.sw.sel{border-color:var(--ink);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ink)}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;padding:16px 24px 22px;position:sticky;bottom:0;background:linear-gradient(180deg,transparent,var(--panel) 40%)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--panel2);border:1px solid var(--line2);color:var(--ink);padding:12px 20px;border-radius:12px;font-size:13.5px;z-index:80;box-shadow:0 20px 50px -20px rgba(0,0,0,.8);opacity:0;transition:all .3s cubic-bezier(.2,.9,.3,1.2);display:flex;align-items:center;gap:9px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast .ok{color:var(--green)}
+
+.hidden{display:none !important}
+.fileinput{display:none}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--ink4);flex-shrink:0;transition:background .2s}
+.sync-dot.off{background:var(--ink4)}
+.sync-dot.on{background:var(--green);box-shadow:0 0 7px var(--green)}
+.sync-dot.busy{background:var(--amber);box-shadow:0 0 7px var(--amber);animation:pulse 1s infinite}
+.sync-dot.err{background:#e06b5a;box-shadow:0 0 7px #e06b5a}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+mark{background:var(--amber);color:#221606;border-radius:3px;padding:0 2px}
+@media(max-width:560px){
+  .shell{padding:26px 14px 80px}
+  .pat-tag{display:none}
+  .fam-tools{opacity:1}
+  .pat-tools{opacity:1}
+  .skill-lbl{display:none}
+}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
+</head>
+<body>
+<div class="shell">
+  <header class="masthead">
+    <p class="kicker">Interview Prep · Trigger → Approach</p>
+    <h1>DSA Pattern <em>Playbook</em></h1>
+    <p class="sub">Your living mind map. Tap a family, then a pattern to reveal its trigger signal and solving approach. Everything here is editable — add, refine, or prune patterns as your intuition sharpens.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="search" placeholder="Search a pattern, signal, or keyword…" oninput="doSearch(this.value)">
+    </div>
+    <button class="btn btn-ghost" onclick="toggleAll(true)">Expand</button>
+    <button class="btn btn-ghost" onclick="toggleAll(false)">Collapse</button>
+    <button class="btn" onclick="openRevision()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v5h5M3.05 13A9 9 0 1 0 6 5.3L3 8"/></svg>Revision</button>
+    <button class="btn" id="syncBtn" onclick="onSyncClick()" title="Google Drive sync"><span id="syncDot" class="sync-dot"></span><span id="syncTxt">Sync</span></button>
+    <button class="btn btn-amber" onclick="openFamModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Family</button>
+  </div>
+  <div class="statline" id="stat"></div>
+  <div id="map"></div>
+
+  <div class="toolbar" style="margin-top:24px;border-top:1px solid var(--line);padding-top:20px">
+    <button class="btn" onclick="doExport()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export JSON</button>
+    <button class="btn" onclick="document.getElementById('imp').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 9l5-5 5 5M12 4v12"/></svg>Import JSON</button>
+    <input type="file" id="imp" class="fileinput" accept="application/json,.json" onchange="doImport(event)">
+    <button class="btn btn-ghost" onclick="resetAll()" style="margin-left:auto;color:var(--ink4)">Reset to defaults</button>
+  </div>
+</div>
+
+<div class="rev-scrim" id="revScrim"><div class="rev-panel" id="revPanel"></div></div>
+<div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ---------- seed data ---------- */
+const SEED = [{"fam": "Arrays & two pointers", "color": "#378ADD", "patterns": [{"name": "Two pointers (opposite ends)", "tag": "sorted array / pair", "trig": "Sorted array, find pair/triplet summing to target, or partition in place.", "how": "Start one pointer at each end. Move left/right inward based on whether current sum is too small or too large. O(n) after sort.", "cx": "O(n) time, O(1) space", "id": "p_1a783202"}, {"name": "Fast & slow pointers", "tag": "linked list / cycle", "trig": "Detect cycle, find middle, find duplicate in [1..n] array, kth from end.", "how": "Slow moves 1 step, fast moves 2. They meet inside a cycle; reset one to head to find cycle start (Floyd's).", "cx": "O(n) time, O(1) space", "id": "p_49e3e100"}, {"name": "Sliding window (fixed)", "tag": "subarray of size k", "trig": "Max/min/avg of every contiguous window of size k.", "how": "Add the entering element, remove the leaving one. Maintain a running aggregate instead of recomputing.", "cx": "O(n) time", "id": "p_a0e1f7f2"}, {"name": "Sliding window (variable)", "tag": "longest/shortest substring", "trig": "Longest/shortest subarray satisfying a constraint (≤k distinct, sum ≥ target).", "how": "Expand right to include elements; shrink left while the window is invalid. Track best at each step. Ask: what's optimized, what makes a window valid, what info do I track.", "cx": "O(n) time", "id": "p_c0f282e9"}, {"name": "Prefix sums / difference array", "tag": "range queries", "trig": "Many range-sum queries, subarray sum equals k, range updates.", "how": "Precompute prefix[i]=sum of first i. Range sum = prefix[r]-prefix[l]. For 'sum=k' count, store prefix counts in a hashmap.", "cx": "O(n) build, O(1) query", "id": "p_efe87be7"}, {"name": "Kadane's (max subarray)", "tag": "max contiguous sum", "trig": "Maximum sum contiguous subarray, max product variants.", "how": "At each index, either extend the running sum or restart from the current element. Track the global best.", "cx": "O(n) time", "id": "p_bb1e83ab"}], "id": "f_445fc0f0"}, {"fam": "Hashing & frequency", "color": "#1D9E75", "patterns": [{"name": "Hash map lookup", "tag": "O(1) membership", "trig": "Need fast existence/count check, two-sum, complement lookups.", "how": "Store seen values/indices as you iterate. For each element check if its complement already exists.", "cx": "O(n) time, O(n) space", "id": "p_240b56fd"}, {"name": "Frequency counting", "tag": "anagrams / counts", "trig": "Group anagrams, top-k frequent, valid permutation, majority element.", "how": "Build a count map. Use sorted-string or char-count tuple as the anagram key. Pair with a heap for top-k.", "cx": "O(n) time", "id": "p_21e39377"}, {"name": "Hashing for dedup / grouping", "tag": "sets, buckets", "trig": "Longest consecutive sequence, group by property.", "how": "Put all in a set; for each element start a streak only if element-1 isn't present, then walk forward.", "cx": "O(n) time", "id": "p_b7283f0d"}], "id": "f_14427786"}, {"fam": "Binary search", "color": "#7F77DD", "patterns": [{"name": "Classic binary search", "tag": "sorted lookup", "trig": "Sorted array, find target or insertion point.", "how": "Maintain lo/hi. Compare mid; discard half. Watch boundary conditions (lo<=hi vs lo<hi).", "cx": "O(log n) time", "id": "p_ec9f3a74"}, {"name": "Binary search on answer", "tag": "min/max feasible value", "trig": "Minimize the max / maximize the min, 'smallest k such that…', monotonic feasibility.", "how": "Define a predicate feasible(x) that's monotonic. Binary search over the answer range, not the array. Find the boundary where the predicate flips.", "cx": "O(n log(range))", "id": "p_a5b0682e"}, {"name": "Search in rotated / 2D", "tag": "modified sorted", "trig": "Rotated sorted array, find peak, search row-col sorted matrix.", "how": "Identify which half is sorted at each mid, then decide which half to keep. For matrix, treat as 1D index or step from a corner.", "cx": "O(log n)", "id": "p_071d35bd"}], "id": "f_138a818f"}, {"fam": "Stack & monotonic", "color": "#D85A30", "patterns": [{"name": "Stack basics", "tag": "LIFO / matching", "trig": "Valid parentheses, evaluate expression, simplify path, backtrack-ish undo.", "how": "Push openings/operands; pop on matching close/operator. Validity = empty stack at end.", "cx": "O(n) time", "id": "p_026e0bd7"}, {"name": "Monotonic stack", "tag": "next greater / smaller", "trig": "Next greater element, daily temperatures, largest rectangle in histogram, stock span.", "how": "Keep a stack that's increasing or decreasing. Pop while the new element breaks the order; each pop resolves an answer. Each element pushed/popped once.", "cx": "O(n) time", "id": "p_9432005d"}], "id": "f_b63b2ec5"}, {"fam": "Linked lists", "color": "#D4537E", "patterns": [{"name": "Pointer manipulation", "tag": "reverse / merge", "trig": "Reverse list, merge two sorted lists, reorder, partition.", "how": "Use a dummy head to simplify edge cases. Carefully rewire next pointers; keep a prev reference. Draw it out.", "cx": "O(n) time, O(1) space", "id": "p_ad8ad9c6"}, {"name": "Cycle & intersection", "tag": "two pointers on list", "trig": "Detect/find cycle start, find intersection node, find middle.", "how": "Floyd's tortoise-hare for cycles. For intersection, advance two pointers and swap heads on reaching null so both travel equal length.", "cx": "O(n) time, O(1) space", "id": "p_735001d3"}], "id": "f_60caccfd"}, {"fam": "Trees & BST", "color": "#0F6E56", "patterns": [{"name": "DFS traversal", "tag": "recursion on nodes", "trig": "Pre/in/post-order, path sums, max depth, diameter, lowest common ancestor.", "how": "Recurse left and right; combine results at the node. Return the value the parent needs (height, sum, bool). LCA: first node where targets split.", "cx": "O(n) time, O(h) stack", "id": "p_2e1facbe"}, {"name": "BFS / level order", "tag": "queue, by level", "trig": "Level-order, zigzag, right-side view, min depth, connect nodes per level.", "how": "Queue of nodes; process level-by-level by recording the queue size at each level start.", "cx": "O(n) time", "id": "p_52a56d7b"}, {"name": "BST properties", "tag": "ordered tree", "trig": "Validate BST, kth smallest, range queries, insert/delete in order.", "how": "In-order traversal yields sorted order. Use the BST invariant to prune to one subtree per comparison.", "cx": "O(h) per op", "id": "p_4cde132d"}], "id": "f_bb708594"}, {"fam": "Heaps & intervals", "color": "#BA7517", "patterns": [{"name": "Top-K / k-way merge", "tag": "priority queue", "trig": "K largest/closest, merge k sorted lists, find median of stream.", "how": "Maintain a heap of size k (min-heap for k-largest). For median use two heaps (max-heap low half, min-heap high half).", "cx": "O(n log k)", "id": "p_e5a907eb"}, {"name": "Interval scheduling", "tag": "sort by start/end", "trig": "Merge intervals, meeting rooms, non-overlapping, insert interval.", "how": "Sort by start (merge) or end (greedy max-count). Sweep and combine/compare with the last kept interval. Min rooms = min-heap of end times.", "cx": "O(n log n)", "id": "p_e3f25564"}], "id": "f_f5aa4b40"}, {"fam": "Graphs", "color": "#185FA5", "patterns": [{"name": "BFS / DFS traversal", "tag": "explore reachable", "trig": "Connected components, flood fill, number of islands, shortest path in unweighted graph.", "how": "Mark visited; BFS gives shortest hops, DFS for connectivity/components. Track visited to avoid revisits.", "cx": "O(V+E)", "id": "p_5c94ff89"}, {"name": "Topological sort", "tag": "DAG ordering", "trig": "Course schedule, build order, dependency resolution, detect cycle in directed graph.", "how": "Kahn's: repeatedly remove zero-indegree nodes. Or DFS post-order reversed. Leftover nodes = cycle.", "cx": "O(V+E)", "id": "p_148e3064"}, {"name": "Dijkstra / shortest path", "tag": "weighted, non-negative", "trig": "Shortest path with positive weights, network delay, cheapest route.", "how": "Min-heap by distance; pop nearest, relax neighbors. Bellman-Ford if negative edges; A* with heuristic.", "cx": "O(E log V)", "id": "p_3fddf0aa"}, {"name": "Union-Find (DSU)", "tag": "dynamic connectivity", "trig": "Connected components with unions, detect cycle in undirected graph, Kruskal's MST, 'number of provinces'.", "how": "find with path compression, union by rank. Two nodes connected iff same root. Reverse-time trick for 'bricks falling' style problems.", "cx": "~O(α(n)) per op", "id": "p_b8886904"}], "id": "f_1d8b72bd"}, {"fam": "Backtracking", "color": "#534AB7", "patterns": [{"name": "Subsets / combinations / permutations", "tag": "enumerate choices", "trig": "Generate all subsets, combinations summing to target, permutations, partitions.", "how": "Recurse: choose an element, recurse, un-choose (backtrack). Use a start index to avoid duplicates; sort+skip equal siblings for unique sets.", "cx": "O(branch^depth)", "id": "p_ee8629e2"}, {"name": "Constraint search", "tag": "grid / board", "trig": "N-Queens, Sudoku, word search, generate valid parentheses.", "how": "Place a choice, check validity, recurse; undo on dead end. Prune early with constraint checks to cut the tree.", "cx": "exponential, pruned", "id": "p_10d22300"}], "id": "f_88accb50"}, {"fam": "Dynamic programming", "color": "#A32D2D", "patterns": [{"name": "1D DP", "tag": "linear states", "trig": "Climbing stairs, house robber, decode ways, max subarray (DP form).", "how": "Define dp[i] from dp[i-1], dp[i-2]…. Answer the 4 questions: what's the state, what are choices, transition, base case. Often roll to O(1) variables.", "cx": "O(n) time", "id": "p_f535448c"}, {"name": "Knapsack / subset", "tag": "pick or skip", "trig": "0/1 knapsack, partition equal subset sum, coin change, target sum.", "how": "State = (index, remaining capacity). Each item: take or skip. Bounded → 0/1; unbounded → reuse items. Optimize 2D→1D by iterating capacity in reverse.", "cx": "O(n·W)", "id": "p_f2d11a3c"}, {"name": "2D grid DP", "tag": "paths on matrix", "trig": "Unique paths, min path sum, edit distance, longest common subsequence.", "how": "dp[i][j] depends on top/left/diagonal. LCS/edit distance compare two strings on a grid. Reduce to two rows for space.", "cx": "O(m·n)", "id": "p_cd5a0f34"}, {"name": "Interval / sequence DP", "tag": "ranges & subsequences", "trig": "Longest increasing subsequence, palindrome partitioning, matrix chain, burst balloons.", "how": "dp over a range [i,j] or LIS via patience sorting + binary search (O(n log n)). Think about the last/split decision in the interval.", "cx": "O(n²) or O(n log n)", "id": "p_967cc088"}, {"name": "DP on trees / graphs", "tag": "states over structure", "trig": "House robber III, tree diameter via DP, longest path in DAG.", "how": "Post-order DFS returning a tuple of sub-states (e.g. rob/skip this node). Combine children results at each node.", "cx": "O(n)", "id": "p_140f9a49"}], "id": "f_4169f069"}, {"fam": "Greedy", "color": "#3B6D11", "patterns": [{"name": "Greedy choice", "tag": "local → global optimum", "trig": "Jump game, gas station, assign cookies, task scheduling, activity selection.", "how": "Prove a greedy invariant: the locally best choice never hurts. Exchange argument — sort by the right key (e.g. difference, deadline) and pick greedily.", "cx": "O(n log n)", "id": "p_4d0c700a"}], "id": "f_988680bd"}, {"fam": "Bit manipulation & math", "color": "#5F5E5A", "patterns": [{"name": "Bit tricks", "tag": "XOR / masks", "trig": "Single number, count bits, subsets via bitmask, power of two check.", "how": "XOR cancels pairs. n&(n-1) clears lowest set bit. Iterate subsets with bitmask DP for small n (≤20).", "cx": "O(n) or O(2^n·n)", "id": "p_ffdf32a6"}, {"name": "Math & number theory", "tag": "gcd / primes / modular", "trig": "GCD, sieve of primes, modular exponentiation, combinatorics with mod.", "how": "Euclid for GCD, sieve for primes up to n, fast power for modular exponent. Precompute factorials for nCr mod p.", "cx": "varies", "id": "p_687d77c8"}], "id": "f_a68d91f2"}, {"fam": "Strings (advanced)", "color": "#993556", "patterns": [{"name": "Rolling hash", "tag": "substring matching", "trig": "Find repeated substrings, Rabin-Karp pattern search, longest dup substring.", "how": "Hash a window; slide by removing the leftmost contribution and adding the new char. Use double hashing to dodge collisions.", "cx": "O(n) average", "id": "p_44105cd9"}, {"name": "Trie", "tag": "prefix tree", "trig": "Autocomplete, word dictionary, prefix search, word search II.", "how": "Each node has child links per character + end flag. Insert/search walks one node per char. Combine with DFS for board search.", "cx": "O(L) per word", "id": "p_ca02291e"}], "id": "f_511c3ea3"}];
+/* ---------- state + persistence ---------- */
+const KEY = 'dsa_playbook_v1';
+const META_KEY = 'dsa_playbook_meta_v1';
+const PALETTE = ["#e8a04b","#378ADD","#1D9E75","#7F77DD","#D85A30","#D4537E","#0F6E56","#BA7517","#185FA5","#534AB7","#A32D2D","#3B6D11","#5F5E5A","#993556","#2E8B8B","#C2569A"];
+
+/* ============================================================
+   GOOGLE DRIVE SYNC — paste your own Client ID below.
+   Until you do, the app runs fully on local cache + defaults.
+   Setup guide is in the chat / README.
+   ============================================================ */
+const GOOGLE_CLIENT_ID = ""; // <-- PASTE YOUR CLIENT ID HERE, e.g. "1234-abcd.apps.googleusercontent.com"
+
+let DATA = load();
+
+function uid(p){return p+Math.random().toString(36).slice(2,10)}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function load(){
+  let d=null;
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){const parsed=JSON.parse(raw); if(Array.isArray(parsed)&&parsed.length) d=parsed;}
+  }catch(e){}
+  if(!d) d=clone(SEED);
+  d.forEach(f=>f.patterns.forEach(p=>{ if(typeof p.skill!=='number') p.skill=0; if(!Array.isArray(p.problems)) p.problems=[]; p.problems.forEach(x=>{ if(!x.id)x.id=uid('x_'); }); }));
+  return d;
+}
+function save(){
+  try{
+    localStorage.setItem(KEY, JSON.stringify(DATA));
+    localStorage.setItem(META_KEY, JSON.stringify({updated:Date.now()}));
+  }catch(e){}
+  driveQueuePush();   // no-op unless signed in
+}
+function localUpdatedAt(){
+  try{ return JSON.parse(localStorage.getItem(META_KEY)||'{}').updated||0; }catch(e){ return 0; }
+}
+
+/* ---------- open-state memory across re-renders ---------- */
+const openFams = new Set();
+const openPats = new Set();
+
+/* ---------- render ---------- */
+const map = document.getElementById('map');
+const stat = document.getElementById('stat');
+let query = '';
+
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function hl(s){
+  s = esc(s);
+  if(!query) return s;
+  const q = query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return s.replace(new RegExp('('+q+')','ig'),'<mark>$1</mark>');
+}
+
+function render(){
+  map.innerHTML='';
+  let totalP=0, shownF=0, shownP=0;
+  DATA.forEach(f=>{
+    totalP += f.patterns.length;
+    const matchPats = f.patterns.filter(p=>matches(f,p));
+    if(query && matchPats.length===0) return;
+    shownF++;
+    const isOpen = openFams.has(f.id) || (query && matchPats.length>0);
+    const fam=document.createElement('div');
+    fam.className='fam'+(isOpen?' open':'');
+    fam.style.setProperty('--swatch-glow', f.color+'55');
+
+    const head=document.createElement('div');
+    head.className='fam-head';
+    head.onclick=(e)=>{ if(e.target.closest('.icon-btn'))return; toggleFam(f.id); };
+    head.innerHTML=`
+      <span class="swatch" style="background:${f.color}"></span>
+      <span class="fam-title">${hl(f.fam)}</span>
+      <span class="fam-count">${f.patterns.length}</span>
+      <span class="fam-tools">
+        <button class="icon-btn" title="Edit family" onclick="openFamModal('${f.id}')">${ICN.edit}</button>
+        <button class="icon-btn danger" title="Delete family" onclick="delFam('${f.id}')">${ICN.trash}</button>
+      </span>
+      <span class="chev">${ICN.chev}</span>`;
+    fam.appendChild(head);
+
+    const body=document.createElement('div');
+    body.className='fam-body';
+    const list = query ? matchPats : f.patterns;
+    list.forEach(p=>{
+      shownP++;
+      const pOpen = openPats.has(p.id);
+      const pat=document.createElement('div');
+      pat.className='pat'+(pOpen?' open':'');
+      const ph=document.createElement('div');
+      ph.className='pat-head';
+      ph.onclick=(e)=>{ if(e.target.closest('.pat-tools'))return; togglePat(p.id); };
+      ph.innerHTML=`
+        <span class="pat-dot"></span>
+        <span class="pat-name">${hl(p.name)}</span>
+        <span class="pat-tag">${hl(p.tag||'')}</span>
+        ${skillHTML(p.skill||0,true,f.id,p.id)}
+        <span class="pat-tools">
+          <button class="icon-btn" title="Edit" onclick="openPatModal('${f.id}','${p.id}')">${ICN.edit}</button>
+          <button class="icon-btn danger" title="Delete" onclick="delPat('${f.id}','${p.id}')">${ICN.trash}</button>
+        </span>`;
+      pat.appendChild(ph);
+      const det=document.createElement('div');
+      det.className='pat-detail';
+      det.innerHTML=`
+        <div class="row"><span class="lbl lbl-when">when</span><span class="body">${hl(p.trig)}</span></div>
+        <div class="row"><span class="lbl lbl-solve">solve</span><span class="body">${hl(p.how)}</span></div>
+        <div class="row"><span class="lbl lbl-cost">cost</span><span class="body mono">${hl(p.cx||'—')}</span></div>`;
+      det.appendChild(renderProblems(f,p));
+      pat.appendChild(det);
+      body.appendChild(pat);
+    });
+    if(!query){
+      const add=document.createElement('button');
+      add.className='add-pat';
+      add.innerHTML=`${ICN.plus} Add a pattern to ${esc(f.fam)}`;
+      add.onclick=()=>openPatModal(f.id);
+      body.appendChild(add);
+    }
+    fam.appendChild(body);
+    map.appendChild(fam);
+  });
+
+  if(shownF===0){
+    map.innerHTML=`<div class="empty"><div class="big">${query?'No patterns match “'+esc(query)+'”':'Your playbook is empty'}</div><div>${query?'Try a different keyword.':'Add a family to begin.'}</div></div>`;
+  }
+  stat.textContent = query
+    ? `${shownP} pattern${shownP!==1?'s':''} across ${shownF} famil${shownF!==1?'ies':'y'} match “${query}”`
+    : `${DATA.length} families · ${totalP} patterns · auto-saved locally`;
+}
+
+function matches(f,p){
+  if(!query) return true;
+  const probText = (p.problems||[]).map(x=>x.name+' '+(x.trig||'')).join(' ');
+  return (f.fam+' '+p.name+' '+(p.tag||'')+' '+p.trig+' '+p.how+' '+(p.cx||'')+' '+probText).toLowerCase().includes(query);
+}
+
+/* ---------- problems within a pattern ---------- */
+const sortByRating = new Set();   // pattern ids currently sorted by rating
+
+function starsHTML(n,interactive,fid,pid,probId){
+  let s='<span class="stars">';
+  for(let i=1;i<=5;i++){
+    const fill=i<=n?' fill':'';
+    const click=interactive?` onclick="event.stopPropagation();setRating('${fid}','${pid}','${probId}',${i})"`:'';
+    s+=`<svg class="star${fill}"${click} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 18.9 6.1 19l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>`;
+  }
+  return s+'</span>';
+}
+
+function skillHTML(n,interactive,fid,pid){
+  const label=['Not rated','Weak','Okay','Strong'][n]||'Not rated';
+  let s=`<span class="skill" title="Your skill level: ${label}"><span class="skill-lbl">skill</span><span class="stars3">`;
+  for(let i=1;i<=3;i++){
+    const fill=i<=n?' fill':'';
+    const click=interactive?` onclick="event.stopPropagation();setSkill('${fid}','${pid}',${i})"`:'';
+    s+=`<svg class="s3${fill}"${click} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 18.9 6.1 19l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>`;
+  }
+  return s+'</span></span>';
+}
+
+function renderProblems(f,p){
+  if(!p.problems) p.problems=[];
+  const wrap=document.createElement('div');
+  wrap.className='prob-wrap';
+  const sorted=sortByRating.has(p.id);
+  const list = sorted ? [...p.problems].map((x,i)=>({x,i})).sort((a,b)=>(a.x.rating||0)-(b.x.rating||0)||a.i-b.i) : p.problems.map((x,i)=>({x,i}));
+
+  const head=document.createElement('div');
+  head.className='prob-head';
+  head.innerHTML=`<span class="prob-title">Problems solved · ${p.problems.length}</span>
+    <span class="prob-sort">
+      <button class="mini ${!sorted?'on':''}" onclick="event.stopPropagation();setSort('${p.id}',false)">Actual order</button>
+      <button class="mini ${sorted?'on':''}" onclick="event.stopPropagation();setSort('${p.id}',true)">By rating ↑</button>
+    </span>`;
+  wrap.appendChild(head);
+
+  if(p.problems.length===0){
+    const e=document.createElement('div'); e.className='no-prob'; e.textContent='No problems logged yet. Add the ones you’ve solved with this pattern.';
+    wrap.appendChild(e);
+  }
+
+  list.forEach(({x,i})=>{
+    const row=document.createElement('div'); row.className='prob';
+    const canUp=!sorted && i>0, canDown=!sorted && i<p.problems.length-1;
+    row.innerHTML=`
+      <span class="prob-ord">
+        <button class="ord-btn" ${canUp?'':'disabled'} title="Move up" onclick="event.stopPropagation();moveProb('${f.id}','${p.id}',${i},-1)">▲</button>
+        <span class="ord-num">${i+1}</span>
+        <button class="ord-btn" ${canDown?'':'disabled'} title="Move down" onclick="event.stopPropagation();moveProb('${f.id}','${p.id}',${i},1)">▼</button>
+      </span>
+      <span class="prob-main">
+        <div class="prob-name">${hl(x.name)}</div>
+        ${x.trig?`<div class="prob-trig"><span class="tk">trigger</span>${hl(x.trig)}</div>`:''}
+      </span>
+      <span class="prob-right">
+        ${starsHTML(x.rating||0,true,f.id,p.id,x.id)}
+        <span class="prob-tools">
+          <button class="icon-btn" title="Edit problem" onclick="event.stopPropagation();openProbModal('${f.id}','${p.id}','${x.id}')">${ICN.edit}</button>
+          <button class="icon-btn danger" title="Delete problem" onclick="event.stopPropagation();delProb('${f.id}','${p.id}','${x.id}')">${ICN.trash}</button>
+        </span>
+      </span>`;
+    wrap.appendChild(row);
+  });
+
+  const add=document.createElement('button');
+  add.className='add-prob';
+  add.innerHTML=`${ICN.plus} Add a solved problem`;
+  add.onclick=(e)=>{ e.stopPropagation(); openProbModal(f.id,p.id); };
+  wrap.appendChild(add);
+  return wrap;
+}
+
+function setSort(pid,on){ on?sortByRating.add(pid):sortByRating.delete(pid); render(); }
+function setSkill(fid,pid,r){
+  const p=DATA.find(x=>x.id===fid)?.patterns.find(x=>x.id===pid); if(!p)return;
+  p.skill = (p.skill===r)?r-1:r;   // click same star to drop one; click again to clear
+  if(p.skill<0)p.skill=0;
+  save(); render();
+}
+function setRating(fid,pid,probId,r){
+  const p=DATA.find(x=>x.id===fid)?.patterns.find(x=>x.id===pid); if(!p)return;
+  const pr=(p.problems||[]).find(x=>x.id===probId); if(!pr)return;
+  pr.rating = (pr.rating===r)?r-1:r;   // click same star again to drop one
+  if(pr.rating<0)pr.rating=0;
+  save(); render();
+}
+function moveProb(fid,pid,i,dir){
+  const p=DATA.find(x=>x.id===fid)?.patterns.find(x=>x.id===pid); if(!p)return;
+  const a=p.problems, j=i+dir;
+  if(j<0||j>=a.length)return;
+  [a[i],a[j]]=[a[j],a[i]];
+  save(); render();
+}
+function delProb(fid,pid,probId){
+  const p=DATA.find(x=>x.id===fid)?.patterns.find(x=>x.id===pid); if(!p)return;
+  const pr=p.problems.find(x=>x.id===probId); if(!pr)return;
+  deleteModal(`Delete “${pr.name}”?`,`This solved-problem entry will be removed from ${p.name}.`,()=>{
+    p.problems=p.problems.filter(x=>x.id!==probId); save(); render(); toast('Problem deleted');
+  });
+}
+function openProbModal(fid,pid,probId){
+  const p=DATA.find(x=>x.id===fid)?.patterns.find(x=>x.id===pid); if(!p)return;
+  if(!p.problems)p.problems=[];
+  const editing=!!probId;
+  const pr=editing?p.problems.find(x=>x.id===probId):{name:'',trig:'',rating:0};
+  let rating=pr.rating||0;
+  modal.innerHTML=`
+    <div class="modal-head"><div class="mk">${editing?'Edit problem':'New problem'} · ${esc(p.name)}</div><h3>${editing?esc(pr.name):'Log a solved problem'}</h3></div>
+    <div class="modal-body">
+      <div class="field"><label>Problem name</label><input id="x_name" value="${esc(pr.name)}" placeholder="e.g. LC 424 · Longest Repeating Character Replacement"></div>
+      <div class="field"><label>Key trigger <span style="color:var(--ink4)">— what signalled this pattern?</span></label><textarea id="x_trig" placeholder="e.g. 'longest substring' + 'at most k changes' → variable sliding window">${esc(pr.trig||'')}</textarea></div>
+      <div class="field"><label>Confidence rating</label><div id="x_stars" style="margin-top:4px">${starsHTML(rating,false)}</div><div class="hint">1 = needs revision · 5 = mastered. Click a star to set.</div></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-amber" id="x_save">${editing?'Save changes':'Add problem'}</button>
+    </div>`;
+  // wire up star picker inside modal
+  const starBox=modal.querySelector('#x_stars');
+  const paint=()=>{ [...starBox.querySelectorAll('.star')].forEach((s,idx)=>s.classList.toggle('fill',idx<rating)); };
+  [...starBox.querySelectorAll('.star')].forEach((s,idx)=>{
+    s.style.cursor='pointer';
+    s.onclick=()=>{ rating=(rating===idx+1)?idx:idx+1; paint(); };
+  });
+  modal.querySelector('#x_save').onclick=()=>{
+    const name=modal.querySelector('#x_name').value.trim();
+    if(!name){toast('Give the problem a name','warn');return;}
+    const trig=modal.querySelector('#x_trig').value.trim();
+    if(editing){ pr.name=name; pr.trig=trig; pr.rating=rating; toast('Problem updated'); }
+    else { p.problems.push({id:uid('x_'),name,trig,rating}); openPats.add(p.id); toast('Problem added'); }
+    save(); closeModal(); render();
+  };
+  scrim.classList.add('show');
+  setTimeout(()=>modal.querySelector('#x_name').focus(),60);
+}
+
+/* ---------- revision overlay ---------- */
+const revScrim=document.getElementById('revScrim'), revPanel=document.getElementById('revPanel');
+let revAsc=true;   // true = lowest rating first
+function closeRevision(){ revScrim.classList.remove('show'); }
+revScrim.onclick=(e)=>{ if(e.target===revScrim) closeRevision(); };
+function openRevision(){ revAsc=true; renderRevision(); revScrim.classList.add('show'); }
+function renderRevision(){
+  const all=[];
+  DATA.forEach(f=>f.patterns.forEach(p=>(p.problems||[]).forEach(x=>all.push({name:x.name,rating:x.rating||0,fam:f.fam,pat:p.name}))));
+  all.sort((a,b)=> revAsc ? (a.rating-b.rating) : (b.rating-a.rating));
+  let cards;
+  if(all.length===0){
+    cards=`<div class="rev-empty"><div class="big">Nothing to revise yet</div><div>Log some solved problems with ratings and they’ll gather here.</div></div>`;
+  }else{
+    cards=all.map((x,i)=>`
+      <div class="rev-card" onclick="this.classList.toggle('shown')">
+        <span class="rev-rank">${i+1}</span>
+        <span class="rev-name">${esc(x.name)}<div class="rev-reveal">${esc(x.pat)} · ${esc(x.fam)}</div></span>
+        <span class="rev-stars">${starsHTML(x.rating,false)}</span>
+      </div>`).join('');
+  }
+  const weak=all.filter(x=>x.rating<=2).length;
+  revPanel.innerHTML=`
+    <div class="rev-top">
+      <h2>Revision <em>queue</em></h2>
+      <button class="rev-close" onclick="closeRevision()">${ICN.close}</button>
+    </div>
+    <p class="rev-sub">${all.length} problem${all.length!==1?'s':''} across all patterns · ${weak} rated ≤2. Tap a card to reveal its pattern.</p>
+    <div class="rev-bar">
+      <button class="mini ${revAsc?'on':''}" onclick="revAsc=true;renderRevision()">Weakest first ↑</button>
+      <button class="mini ${!revAsc?'on':''}" onclick="revAsc=false;renderRevision()">Strongest first ↓</button>
+    </div>
+    ${cards}`;
+}
+
+/* ---------- toggles ---------- */
+function toggleFam(id){ openFams.has(id)?openFams.delete(id):openFams.add(id); render(); }
+function togglePat(id){ openPats.has(id)?openPats.delete(id):openPats.add(id); render(); }
+function toggleAll(open){
+  openFams.clear(); openPats.clear();
+  if(open) DATA.forEach(f=>openFams.add(f.id));
+  render();
+}
+function doSearch(v){ query=v.trim().toLowerCase(); render(); }
+
+/* ---------- CRUD: families ---------- */
+function delFam(id){
+  const f=DATA.find(x=>x.id===id); if(!f)return;
+  deleteModal(`Delete “${f.fam}”?`, `This removes the family and all ${f.patterns.length} pattern(s) inside it. This can't be undone.`, ()=>{
+    DATA=DATA.filter(x=>x.id!==id); save(); render(); toast('Family deleted');
+  });
+}
+function delPat(fid,pid){
+  const f=DATA.find(x=>x.id===fid); if(!f)return;
+  const p=f.patterns.find(x=>x.id===pid); if(!p)return;
+  deleteModal(`Delete “${p.name}”?`, `This pattern will be removed from ${f.fam}.`, ()=>{
+    f.patterns=f.patterns.filter(x=>x.id!==pid); save(); render(); toast('Pattern deleted');
+  });
+}
+
+/* ---------- modals ---------- */
+const scrim=document.getElementById('scrim'), modal=document.getElementById('modal');
+function closeModal(){ scrim.classList.remove('show'); }
+scrim.onclick=(e)=>{ if(e.target===scrim) closeModal(); };
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeRevision(); } });
+
+function openFamModal(id){
+  const editing = !!id;
+  const f = editing ? DATA.find(x=>x.id===id) : {fam:'',color:PALETTE[DATA.length%PALETTE.length]};
+  let chosen = f.color;
+  modal.innerHTML=`
+    <div class="modal-head"><div class="mk">${editing?'Edit family':'New family'}</div><h3>${editing?esc(f.fam):'Add a pattern family'}</h3></div>
+    <div class="modal-body">
+      <div class="field"><label>Family name</label><input id="m_fam" value="${esc(f.fam)}" placeholder="e.g. Graphs"></div>
+      <div class="field"><label>Accent color</label><div class="swatches" id="m_sw"></div></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-amber" id="m_save">${editing?'Save changes':'Create family'}</button>
+    </div>`;
+  const sw=modal.querySelector('#m_sw');
+  PALETTE.forEach(c=>{
+    const b=document.createElement('div'); b.className='sw'+(c===chosen?' sel':''); b.style.background=c;
+    b.onclick=()=>{chosen=c; sw.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');};
+    sw.appendChild(b);
+  });
+  modal.querySelector('#m_save').onclick=()=>{
+    const name=modal.querySelector('#m_fam').value.trim();
+    if(!name){toast('Give the family a name','warn');return;}
+    if(editing){ f.fam=name; f.color=chosen; toast('Family updated'); }
+    else { const nf={id:uid('f_'),fam:name,color:chosen,patterns:[]}; DATA.push(nf); openFams.add(nf.id); toast('Family added'); }
+    save(); closeModal(); render();
+  };
+  scrim.classList.add('show');
+  setTimeout(()=>modal.querySelector('#m_fam').focus(),60);
+}
+
+function openPatModal(fid,pid){
+  const f=DATA.find(x=>x.id===fid); if(!f)return;
+  const editing=!!pid;
+  const p = editing ? f.patterns.find(x=>x.id===pid) : {name:'',tag:'',trig:'',how:'',cx:'',skill:0};
+  let skill = p.skill||0;
+  modal.innerHTML=`
+    <div class="modal-head"><div class="mk">${editing?'Edit pattern':'New pattern'} · ${esc(f.fam)}</div><h3>${editing?esc(p.name):'Add a pattern'}</h3></div>
+    <div class="modal-body">
+      <div class="field"><label>Pattern name</label><input id="p_name" value="${esc(p.name)}" placeholder="e.g. Monotonic stack"></div>
+      <div class="field"><label>Short tag <span style="color:var(--ink4)">(the one-liner on the right)</span></label><input id="p_tag" value="${esc(p.tag)}" placeholder="e.g. next greater / smaller"></div>
+      <div class="field"><label>When to use it · the trigger signal</label><textarea id="p_trig" placeholder="What in the problem statement screams this pattern?">${esc(p.trig)}</textarea></div>
+      <div class="field"><label>How to solve it · the approach</label><textarea id="p_how" placeholder="The core mechanic / key insight.">${esc(p.how)}</textarea></div>
+      <div class="field"><label>Cost · time / space</label><input id="p_cx" value="${esc(p.cx)}" placeholder="e.g. O(n) time, O(1) space"></div>
+      <div class="field"><label>Your skill level <span style="color:var(--ink4)">— how strong are you on this pattern?</span></label><div id="p_skill" style="margin-top:4px">${skillHTML(skill,false)}</div><div class="hint">1 = weak · 2 = okay · 3 = strong. Click to set.</div></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-amber" id="p_save">${editing?'Save changes':'Add pattern'}</button>
+    </div>`;
+  const skBox=modal.querySelector('#p_skill');
+  const paintSk=()=>{ [...skBox.querySelectorAll('.s3')].forEach((s,idx)=>s.classList.toggle('fill',idx<skill)); };
+  [...skBox.querySelectorAll('.s3')].forEach((s,idx)=>{
+    s.style.cursor='pointer';
+    s.onclick=()=>{ skill=(skill===idx+1)?idx:idx+1; paintSk(); };
+  });
+  modal.querySelector('#p_save').onclick=()=>{
+    const v=id=>modal.querySelector(id).value.trim();
+    const name=v('#p_name');
+    if(!name){toast('Give the pattern a name','warn');return;}
+    const obj={name,tag:v('#p_tag'),trig:v('#p_trig'),how:v('#p_how'),cx:v('#p_cx'),skill};
+    if(editing){ Object.assign(p,obj); toast('Pattern updated'); }
+    else { obj.id=uid('p_'); obj.problems=[]; f.patterns.push(obj); openFams.add(f.id); openPats.add(obj.id); toast('Pattern added'); }
+    save(); closeModal(); render();
+  };
+  scrim.classList.add('show');
+  setTimeout(()=>modal.querySelector('#p_name').focus(),60);
+}
+
+const DELETE_PW = 'JayaVishal@2005';
+
+function deleteModal(title,msg,onYes){
+  modal.innerHTML=`
+    <div class="modal-head"><div class="mk" style="color:#f0a">Password required</div><h3>${esc(title)}</h3></div>
+    <div class="modal-body">
+      <p style="color:var(--ink2);font-size:15px;margin:2px 0 14px;line-height:1.6">${esc(msg)}</p>
+      <div class="field" style="margin-bottom:6px">
+        <label>Enter password to confirm deletion</label>
+        <input type="password" id="d_pw" placeholder="Password" autocomplete="off">
+        <div class="hint" id="d_err" style="color:#f88;display:none">Incorrect password.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn" id="d_yes" style="background:#532;border-color:#743;color:#fbb">Delete</button>
+    </div>`;
+  const pw=modal.querySelector('#d_pw'), err=modal.querySelector('#d_err');
+  const attempt=()=>{
+    if(pw.value===DELETE_PW){ closeModal(); onYes(); }
+    else { err.style.display='block'; pw.value=''; pw.focus(); }
+  };
+  modal.querySelector('#d_yes').onclick=attempt;
+  pw.addEventListener('keydown',e=>{ if(e.key==='Enter') attempt(); });
+  scrim.classList.add('show');
+  setTimeout(()=>pw.focus(),60);
+}
+
+function confirmModal(title,msg,onYes,label){
+  modal.innerHTML=`
+    <div class="modal-head"><div class="mk" style="color:#e88">Confirm</div><h3>${esc(title)}</h3></div>
+    <div class="modal-body"><p style="color:var(--ink2);font-size:15px;margin:2px 0 4px;line-height:1.6">${esc(msg)}</p></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn" id="c_yes" style="background:#532;border-color:#743;color:#fbb">${esc(label||'Confirm')}</button>
+    </div>`;
+  modal.querySelector('#c_yes').onclick=()=>{ closeModal(); onYes(); };
+  scrim.classList.add('show');
+}
+
+/* ---------- import / export ---------- */
+function doExport(){
+  const clean = DATA.map(f=>({fam:f.fam,color:f.color,patterns:f.patterns.map(p=>({name:p.name,tag:p.tag,trig:p.trig,how:p.how,cx:p.cx,skill:p.skill||0,problems:(p.problems||[]).map(x=>({name:x.name,trig:x.trig||'',rating:x.rating||0}))}))}));
+  const blob=new Blob([JSON.stringify(clean,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='dsa_patterns.json';
+  a.click();
+  toast('Exported dsa_patterns.json');
+}
+function doImport(e){
+  const file=e.target.files[0]; if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!Array.isArray(d)) throw 0;
+      DATA=d.map(f=>({id:uid('f_'),fam:f.fam||'Untitled',color:f.color||PALETTE[0],
+        patterns:(f.patterns||[]).map(p=>({id:uid('p_'),name:p.name||'',tag:p.tag||'',trig:p.trig||'',how:p.how||'',cx:p.cx||'',skill:p.skill||0,
+          problems:(p.problems||[]).map(x=>({id:uid('x_'),name:x.name||'',trig:x.trig||'',rating:x.rating||0}))}))}));
+      save(); openFams.clear(); openPats.clear(); render(); toast('Imported '+DATA.length+' families');
+    }catch(err){ toast('Could not read that file','warn'); }
+    e.target.value='';
+  };
+  r.readAsText(file);
+}
+function resetAll(){
+  deleteModal('Reset to defaults?','This erases your current playbook and restores the original 13 families. Export first if you want a backup.',()=>{
+    DATA=clone(SEED); DATA.forEach(f=>{f.id=uid('f_');f.patterns.forEach(p=>p.id=uid('p_'))});
+    save(); openFams.clear(); openPats.clear(); render(); toast('Reset to defaults');
+  });
+}
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg,kind){
+  const t=document.getElementById('toast');
+  t.innerHTML=(kind==='warn'?'⚠':'<span class="ok">✓</span>')+' '+esc(msg);
+  t.classList.add('show'); clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ---------- icons ---------- */
+const ICN={
+  chev:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 6 6 6-6 6"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  plus:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>',
+  close:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>'
+};
+
+render();
+
+/* ============================================================
+   GOOGLE DRIVE SYNC MODULE
+   - Stores one file "dsa_playbook.json" in Drive's hidden
+     appDataFolder (private to this app, invisible in your Drive UI).
+   - Newest-wins conflict resolution via an "updated" timestamp.
+   - Fully degrades: if offline / not configured / blocked, the app
+     just uses localStorage + defaults. Nothing breaks.
+   ============================================================ */
+const DRIVE_FILE_NAME = 'dsa_playbook.json';
+const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
+let gTokenClient=null, gAccessToken=null, gapiReady=false, gisReady=false, driveFileId=null, pushTimer=null;
+
+function setSync(state,label){
+  const dot=document.getElementById('syncDot'), txt=document.getElementById('syncTxt');
+  if(!dot)return;
+  dot.className='sync-dot '+state;
+  txt.textContent=label;
+}
+
+function syncConfigured(){ return !!GOOGLE_CLIENT_ID && location.protocol.startsWith('http'); }
+
+function initGoogle(){
+  if(!syncConfigured()){ setSync('off','Local only'); return; }
+  setSync('off','Sign in');
+  const ready=()=> (window.gapi && window.google && window.google.accounts && window.google.accounts.oauth2);
+  let tries=0;
+  const t=setInterval(()=>{
+    tries++;
+    if(ready()){
+      clearInterval(t);
+      gapi.load('client',async()=>{
+        try{
+          await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']});
+          gapiReady=true;
+        }catch(e){ setSync('err','Sync error'); }
+      });
+      gTokenClient=google.accounts.oauth2.initTokenClient({
+        client_id:GOOGLE_CLIENT_ID, scope:SCOPES,
+        callback:(resp)=>{
+          if(resp && resp.access_token){
+            gAccessToken=resp.access_token;
+            gapi.client.setToken({access_token:gAccessToken});
+            try{localStorage.setItem('dsa_drive_was_connected','1');}catch(e){}
+            onSignedIn();
+          } else { setSync('err','Sign in failed'); }
+        }
+      });
+      gisReady=true;
+      let was=false; try{was=localStorage.getItem('dsa_drive_was_connected')==='1';}catch(e){}
+      if(was){ setSync('busy','Reconnecting…'); gTokenClient.requestAccessToken({prompt:''}); }
+    } else if(tries>40){ clearInterval(t); setSync('off','Offline'); }
+  },200);
+}
+
+function onSyncClick(){
+  if(!GOOGLE_CLIENT_ID){ toast('Add your Google Client ID to enable sync — see setup guide','warn'); return; }
+  if(!location.protocol.startsWith('http')){ toast('Drive sync needs the GitHub Pages URL, not a local file','warn'); return; }
+  if(gAccessToken){ driveSyncNow(); }
+  else if(gisReady && gTokenClient){ setSync('busy','Connecting…'); gTokenClient.requestAccessToken({prompt:'consent'}); }
+  else { toast('Google sync still loading — try again in a moment','warn'); }
+}
+
+async function onSignedIn(){
+  setSync('busy','Syncing…');
+  try{
+    await driveFindFile();
+    const remote=await driveDownload();
+    const localTime=localUpdatedAt();
+    const remoteTime=remote? (remote.updated||0):0;
+    if(remote && remoteTime>=localTime){
+      applyImported(remote.data);
+      toast('Loaded latest from Google Drive');
+    } else {
+      await driveUpload();
+      toast('Synced your data to Google Drive');
+    }
+    setSync('on','Synced');
+  }catch(e){ setSync('err','Sync error'); toast('Drive sync had a problem; your data is safe locally','warn'); }
+}
+
+async function driveSyncNow(){
+  setSync('busy','Syncing…');
+  try{ await driveUpload(); setSync('on','Synced'); toast('Synced to Google Drive'); }
+  catch(e){ setSync('err','Sync error'); }
+}
+
+async function driveFindFile(){
+  const res=await gapi.client.drive.files.list({spaces:'appDataFolder', q:"name='"+DRIVE_FILE_NAME+"'", fields:'files(id,name)'});
+  const files=res.result.files||[];
+  driveFileId = files.length? files[0].id : null;
+}
+
+async function driveDownload(){
+  if(!driveFileId) return null;
+  const res=await gapi.client.drive.files.get({fileId:driveFileId, alt:'media'});
+  try{ return typeof res.result==='string'? JSON.parse(res.result) : res.result; }
+  catch(e){ try{ return JSON.parse(res.body); }catch(_){ return null; } }
+}
+
+function payload(){
+  const clean = DATA.map(f=>({fam:f.fam,color:f.color,patterns:f.patterns.map(p=>({name:p.name,tag:p.tag,trig:p.trig,how:p.how,cx:p.cx,skill:p.skill||0,problems:(p.problems||[]).map(x=>({name:x.name,trig:x.trig||'',rating:x.rating||0}))}))}));
+  return {updated:localUpdatedAt()||Date.now(), data:clean};
+}
+
+async function driveUpload(){
+  if(!gAccessToken) return;
+  const body=JSON.stringify(payload());
+  const meta={name:DRIVE_FILE_NAME, mimeType:'application/json'};
+  if(!driveFileId) meta.parents=['appDataFolder'];
+  const boundary='-------dsa'+Math.random().toString(36).slice(2);
+  const multipart=
+    '--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+
+    JSON.stringify(meta)+'\r\n'+
+    '--'+boundary+'\r\nContent-Type: application/json\r\n\r\n'+
+    body+'\r\n--'+boundary+'--';
+  const method=driveFileId?'PATCH':'POST';
+  const url='https://www.googleapis.com/upload/drive/v3/files'+(driveFileId?('/'+driveFileId):'')+'?uploadType=multipart';
+  const resp=await fetch(url,{method,headers:{Authorization:'Bearer '+gAccessToken,'Content-Type':'multipart/related; boundary='+boundary},body:multipart});
+  if(!resp.ok) throw new Error('upload failed '+resp.status);
+  const j=await resp.json(); if(j.id) driveFileId=j.id;
+}
+
+function driveQueuePush(){
+  if(!gAccessToken) return;
+  setSync('busy','Saving…');
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(async()=>{
+    try{ await driveUpload(); setSync('on','Synced'); }
+    catch(e){ setSync('err','Will retry'); }
+  },1200);
+}
+
+function applyImported(arr){
+  if(!Array.isArray(arr)) return;
+  DATA=arr.map(f=>({id:uid('f_'),fam:f.fam||'Untitled',color:f.color||PALETTE[0],
+    patterns:(f.patterns||[]).map(p=>({id:uid('p_'),name:p.name||'',tag:p.tag||'',trig:p.trig||'',how:p.how||'',cx:p.cx||'',skill:p.skill||0,
+      problems:(p.problems||[]).map(x=>({id:uid('x_'),name:x.name||'',trig:x.trig||'',rating:x.rating||0}))}))}));
+  try{ localStorage.setItem(KEY, JSON.stringify(DATA)); localStorage.setItem(META_KEY, JSON.stringify({updated:Date.now()})); }catch(e){}
+  openFams.clear(); openPats.clear(); render();
+}
+
+initGoogle();
+</script>
+</body>
+</html>
